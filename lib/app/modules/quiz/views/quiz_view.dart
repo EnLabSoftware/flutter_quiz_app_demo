@@ -30,16 +30,15 @@ class QuizView extends GetView<QuizController> {
           Image.asset("assets/images/bg4.png", fit: BoxFit.fill),
           SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: TimerBar(),
+                  child: ProgressBar(),
                 ),
                 const SizedBox(height: kDefaultPadding),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: ProgressBar(),
+                  child: TimerBar(),
                 ),
                 const Divider(thickness: 1.5),
                 const SizedBox(height: kDefaultPadding),

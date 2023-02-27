@@ -10,6 +10,18 @@ class TimerBar extends GetView<QuizController> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox();
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Obx(
+          () => CircularProgressIndicator(
+            value: controller.time / controller.maxTime,
+            strokeWidth: 5,
+             valueColor:const AlwaysStoppedAnimation<Color>(Colors.cyanAccent)
+          ),
+        ),
+        const Positioned(child: Text("30s"))
+      ],
+    );
   }
 }

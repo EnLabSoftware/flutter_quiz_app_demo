@@ -10,27 +10,45 @@ class ProgressBar extends GetView<QuizController> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox();
-    /*return Obx(
-          () => Text.rich(
-        TextSpan(
-          text:
-          "Question ${_questionController.questionNumber.value}",
-          style: Theme.of(context)
-              .textTheme
-              .headline4
-              .copyWith(color: kSecondaryColor),
-          children: [
-            TextSpan(
-              text: "/${_questionController.questions.length}",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: kSecondaryColor),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white54,
+        borderRadius: BorderRadius.circular(20),
       ),
-    );*/
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+            child: Container(
+              height: 15,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.black12),
+              ),
+              alignment: Alignment.centerLeft,
+              child: Obx(
+                () => AnimatedContainer(
+                  duration: const Duration(
+                    milliseconds: 100,
+                  ),
+                  height: 14,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  width: controller.currentQsNum * Get.width / controller.maxQs,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: kPrimaryGradient,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text("${controller.currentQsNum}/${controller.maxQs}"),
+        ],
+      ),
+    );
   }
 }
