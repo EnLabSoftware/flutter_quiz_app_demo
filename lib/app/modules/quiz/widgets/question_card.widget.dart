@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:quiz_demo/app/constant.dart';
 import 'package:quiz_demo/app/modules/quiz/controllers/quiz_controller.dart';
 import 'package:quiz_demo/app/modules/quiz/models/question.model.dart';
+import 'package:quiz_demo/app/widgets/app_button.widget.dart';
 
 class QuestionCard extends GetView<QuizController> {
   const QuestionCard({
@@ -14,34 +15,66 @@ class QuestionCard extends GetView<QuizController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-      padding: const EdgeInsets.all(kDefaultPadding),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Column(
-        children: [
-          Text(
-            question.question,
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(color: kBlackColor),
-          ),
-          const SizedBox(height: kDefaultPadding / 2),
-          ...List.generate(
-            question.incorrectAnswers.length,
-            (index) => Option(
-              index: index,
-              question: question,
-              onPressed: () => controller.checkAns(question, index),
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(kDefaultPadding),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.white.withOpacity(1)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                )),
+            child: Column(
+              children: [
+                Text(
+                  question.question,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(color: kBlackColor),
+                ),
+                const SizedBox(height: kDefaultPadding / 2),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Option(
+                        index: index,
+                        question: question,
+                        onPressed: () => controller.checkAns(question, index),
+                      );
+                    },
+                    itemCount: question.incorrectAnswers.length,
+                    shrinkWrap: true,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 12),
+        Align(
+          alignment: Alignment.centerRight,
+          child: AppButton(
+            width: 120,
+            labelText: labelText,
+            onPressed: controller.handleNext,
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
     );
+  }
+
+  String get labelText {
+    return question.isAnswered
+        ? controller.currentQsNum == controller.maxQs
+            ? "Finish"
+            : "Next"
+        : "Skip";
   }
 }
 
@@ -56,12 +89,10 @@ class Option extends StatelessWidget {
   final int index;
   final VoidCallback onPressed;
 
-  bool get isAnswer => question.selectedAnswer != null;
-
-  Color get getTheRightColor {
-    if (isAnswer) {
+  Color get color {
+    if (question.isAnswered) {
       if (question.answers[index] == question.selectedAnswer) {
-        if (question.correctAnswer == question.selectedAnswer) {
+        if (question.isCorrect) {
           return kGreenColor;
         } else {
           return kRedColor;
@@ -71,19 +102,19 @@ class Option extends StatelessWidget {
     return kGrayColor;
   }
 
-  IconData get getTheRightIcon {
-    return getTheRightColor == kRedColor ? Icons.close : Icons.done;
+  IconData get iconData {
+    return color == kRedColor ? Icons.close : Icons.done;
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: question.isAnswered ? null : onPressed,
       child: Container(
         margin: const EdgeInsets.only(top: kDefaultPadding),
         padding: const EdgeInsets.all(kDefaultPadding),
         decoration: BoxDecoration(
-          border: Border.all(color: getTheRightColor),
+          border: Border.all(color: color),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -92,22 +123,18 @@ class Option extends StatelessWidget {
             Expanded(
               child: Text(
                 "${index + 1}. ${question.answers[index]}",
-                style: TextStyle(color: getTheRightColor, fontSize: 16),
+                style: TextStyle(color: color, fontSize: 16),
               ),
             ),
             Container(
               height: 26,
               width: 26,
               decoration: BoxDecoration(
-                color: getTheRightColor == kGrayColor
-                    ? Colors.transparent
-                    : getTheRightColor,
+                color: color == kGrayColor ? Colors.transparent : color,
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: getTheRightColor),
+                border: Border.all(color: color),
               ),
-              child: getTheRightColor == kGrayColor
-                  ? null
-                  : Icon(getTheRightIcon, size: 16),
+              child: color == kGrayColor ? null : Icon(iconData, size: 16),
             )
           ],
         ),

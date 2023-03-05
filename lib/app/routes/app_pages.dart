@@ -19,16 +19,19 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
+      transition: Transition.cupertino,
     ),
     GetPage(
       name: _Paths.QUIZ,
       page: () => const QuizView(),
       binding: QuizBinding(),
+      transition: Transition.cupertino,
     ),
     GetPage(
       name: _Paths.SCORE,
       page: () => const ScoreView(),
       binding: ScoreBinding(),
+      transition: Transition.cupertino,
     ),
   ];
 }

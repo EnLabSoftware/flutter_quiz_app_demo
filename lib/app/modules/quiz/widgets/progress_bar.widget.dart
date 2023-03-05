@@ -11,17 +11,16 @@ class ProgressBar extends GetView<QuizController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.white54,
+        color: Colors.black38,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: Container(
-              height: 15,
+              height: 10,
               decoration: BoxDecoration(
                 color: Colors.black12,
                 borderRadius: BorderRadius.circular(20),
@@ -48,7 +47,11 @@ class ProgressBar extends GetView<QuizController> {
             ),
           ),
           const SizedBox(width: 12),
-          Obx(() => Text("${controller.currentQsNum}/${controller.maxQs}")),
+          Obx(() => Text(
+                "${controller.currentQsNum}/${controller.maxQs}",
+                style: Theme.of(context).textTheme.headline5?.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              ),),
         ],
       ),
     );

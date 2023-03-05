@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:quiz_demo/app/constant.dart';
+import 'package:quiz_demo/app/modules/quiz/models/question.model.dart';
 import 'package:quiz_demo/app/modules/quiz/widgets/timer_bar.widget.dart';
 import 'package:quiz_demo/app/modules/quiz/widgets/progress_bar.widget.dart';
 import 'package:quiz_demo/app/modules/quiz/widgets/question_card.widget.dart';
@@ -14,6 +16,7 @@ class QuizView extends GetView<QuizController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -24,31 +27,43 @@ class QuizView extends GetView<QuizController> {
         elevation: 0,
         centerTitle: false,
       ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset("assets/images/bg4.png", fit: BoxFit.fill),
-          SafeArea(
+      body: const SafeArea(
+        child: QuizBody(),
+      ),
+    );
+  }
+}
+
+class QuizBody extends GetView<QuizController> {
+  const QuizBody({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      switch (controller.loadStatus) {
+        case LoadStatus.none:
+        case LoadStatus.error:
+          return const SizedBox();
+        case LoadStatus.loading:
+          return const Center(child: CupertinoActivityIndicator());
+        case LoadStatus.success:
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: ProgressBar(),
-                ),
-                const SizedBox(height: kDefaultPadding),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: TimerBar(),
-                ),
+                const ProgressBar(),
+                const SizedBox(height: 12),
+                const TimerBar(),
+                const SizedBox(height: 12),
                 const Divider(thickness: 1.5),
-                const SizedBox(height: kDefaultPadding),
+                const SizedBox(height: 12),
                 Obx(
-                    ()=> Expanded(
+                  () => Expanded(
                     child: PageView.builder(
-                      // Block swipe to next qn
                       physics: const NeverScrollableScrollPhysics(),
                       controller: controller.pageController,
-                      onPageChanged: controller.updateTheQnNum,
                       itemCount: controller.questions.length,
                       itemBuilder: (context, index) =>
                           QuestionCard(question: controller.questions[index]),
@@ -57,9 +72,8 @@ class QuizView extends GetView<QuizController> {
                 ),
               ],
             ),
-          )
-        ],
-      ),
-    );
+          );
+      }
+    });
   }
 }

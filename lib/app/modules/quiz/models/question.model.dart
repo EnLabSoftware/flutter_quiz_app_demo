@@ -12,6 +12,10 @@ class QuestionModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? selectedAnswer;
 
+  bool get isCorrect => selectedAnswer == correctAnswer;
+
+  bool get isAnswered => selectedAnswer != null;
+
   QuestionModel({
     required this.id,
     required this.question,
@@ -25,4 +29,11 @@ class QuestionModel {
       _$QuestionModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionModelToJson(this);
+}
+
+enum LoadStatus {
+  none,
+  loading,
+  error,
+  success,
 }

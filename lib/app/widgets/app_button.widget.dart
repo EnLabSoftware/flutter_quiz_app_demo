@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_demo/app/constant.dart';
 
 final borderRadius = BorderRadius.circular(12);
 
@@ -8,7 +9,7 @@ class AppButton extends StatelessWidget {
     required this.labelText,
     required this.onPressed,
     this.padding,
-    this.gradient,
+    this.gradient = kPrimaryGradient,
     this.width,
     this.height,
   }) : super(key: key);
@@ -22,12 +23,8 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: borderRadius,
-      ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 0,
@@ -35,8 +32,9 @@ class AppButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          padding: padding ?? const EdgeInsets.all(20),
-          backgroundColor: Colors.transparent,
+          padding: padding ??
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+          backgroundColor: kButtonColor,
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
           ),
@@ -44,8 +42,8 @@ class AppButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           labelText,
-          style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: Colors.black,
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
         ),
