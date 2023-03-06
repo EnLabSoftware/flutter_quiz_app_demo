@@ -1,21 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:quiz_demo/app/modules/quiz/data/question.repository.dart';
 import 'package:quiz_demo/app/modules/quiz/models/question.model.dart';
-import 'package:http/http.dart' as http;
 import 'package:quiz_demo/app/modules/score/models/score.model.dart';
 import 'package:quiz_demo/app/routes/app_pages.dart';
 
 class QuizController extends GetxController {
-  //TODO: Implement QuizController
+  final QuestionRepository questionRepository;
+
+  QuizController({required this.questionRepository});
 
   final RxList<QuestionModel> questions = <QuestionModel>[].obs;
   final pageController = PageController();
+
   String? userName;
 
-  Timer? timer;
+  Timer? _timer;
   final RxInt _time = 0.obs;
 
   int get time => _time.value;
@@ -25,7 +28,7 @@ class QuizController extends GetxController {
 
   int get currentQsNum => _currentQsNum.value;
 
-  int maxQs = 5;
+  int totalQuestion = 5;
 
   final Rx<LoadStatus> _loadStatus = LoadStatus.none.obs;
 
@@ -59,20 +62,11 @@ class QuizController extends GetxController {
   }
 
   Future<void> _getQuestions() async {
-    final response = await http
-        .get(Uri.parse('https://the-trivia-api.com/api/questions?limit=5'));
-    if (response.statusCode == 200) {
-      final List<QuestionModel> result = jsonDecode(response.body)
-          .map<QuestionModel>((item) => QuestionModel.fromJson(item))
-          .toList();
-      for (var element in result) {
-        element.answers = [element.correctAnswer, ...element.incorrectAnswers];
-        element.answers.shuffle();
-      }
+    try {
+      final result = await questionRepository.getQuestions();
       questions.value = result;
-      //
-    } else {
-      throw Exception('Failed to load album');
+    } catch (e) {
+      log(e.toString());
     }
   }
 
@@ -82,7 +76,7 @@ class QuizController extends GetxController {
   }
 
   handleNext() {
-    if (currentQsNum != questions.length) {
+    if (currentQsNum < questions.length) {
       _nextQuestion();
     } else {
       _finishQuiz();
@@ -95,20 +89,26 @@ class QuizController extends GetxController {
     int correctAnswers = questions.where((_) => _.isCorrect).length;
     Get.offAllNamed(
       Routes.SCORE,
-      arguments:
-          ScoreArgument(correctAnswers: correctAnswers, totalQuestion: maxQs),
+      arguments: ScoreArgument(
+          correctAnswers: correctAnswers, totalQuestion: totalQuestion),
     );
   }
 
   void _nextQuestion() {
     pageController.nextPage(
-        duration: Duration(milliseconds: 250), curve: Curves.ease);
-    _currentQsNum.value++;
+        duration: const Duration(milliseconds: 250), curve: Curves.ease);
+    //
+    _increaseCurrentQsNum();
+    //
     _resetTime();
   }
 
+  void _increaseCurrentQsNum() {
+    _currentQsNum.value++;
+  }
+
   void _startTime() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (_timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _time.value += 100;
       if (time == maxTime) handleNext();
     });
@@ -119,6 +119,6 @@ class QuizController extends GetxController {
   }
 
   void _cancelTime() {
-    timer?.cancel();
+    _timer?.cancel();
   }
 }

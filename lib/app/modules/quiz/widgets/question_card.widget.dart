@@ -61,6 +61,7 @@ class QuestionCard extends GetView<QuizController> {
           child: AppButton(
             width: 120,
             labelText: labelText,
+            backgroundColor: backgroundColor,
             onPressed: controller.handleNext,
           ),
         ),
@@ -71,10 +72,16 @@ class QuestionCard extends GetView<QuizController> {
 
   String get labelText {
     return question.isAnswered
-        ? controller.currentQsNum == controller.maxQs
+        ? controller.currentQsNum == controller.totalQuestion
             ? "Finish"
             : "Next"
         : "Skip";
+  }
+
+  Color? get backgroundColor {
+    return question.isAnswered
+        ? null
+        : kSecondaryButtonColor;
   }
 }
 

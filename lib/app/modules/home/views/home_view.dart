@@ -46,7 +46,6 @@ class _HomeViewState extends State<HomeView> {
               const Spacer(), // 1/6
               AppButton(
                 width: Get.width,
-                gradient: kPrimaryGradient,
                 onPressed: _onPressed,
                 labelText: "Start Quiz",
               ),

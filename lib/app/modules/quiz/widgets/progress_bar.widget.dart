@@ -37,7 +37,7 @@ class ProgressBar extends GetView<QuizController> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   width: (controller.currentQsNum - 1) *
                       Get.width /
-                      controller.maxQs,
+                      controller.totalQuestion,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     gradient: kPrimaryGradient,
@@ -48,7 +48,7 @@ class ProgressBar extends GetView<QuizController> {
           ),
           const SizedBox(width: 12),
           Obx(() => Text(
-                "${controller.currentQsNum}/${controller.maxQs}",
+                "${controller.currentQsNum}/${controller.totalQuestion}",
                 style: Theme.of(context).textTheme.headline5?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.bold),
               ),),

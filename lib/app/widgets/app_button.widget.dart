@@ -9,17 +9,17 @@ class AppButton extends StatelessWidget {
     required this.labelText,
     required this.onPressed,
     this.padding,
-    this.gradient = kPrimaryGradient,
     this.width,
     this.height,
+    this.backgroundColor,
   }) : super(key: key);
 
   final String labelText;
   final Function() onPressed;
   final EdgeInsetsGeometry? padding;
-  final Gradient? gradient;
   final double? width;
   final double? height;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class AppButton extends StatelessWidget {
           shadowColor: Colors.transparent,
           padding: padding ??
               const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
-          backgroundColor: kButtonColor,
+          backgroundColor: backgroundColor ?? kPrimaryButtonColor,
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
           ),
