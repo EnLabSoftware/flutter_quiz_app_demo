@@ -90,7 +90,9 @@ class QuizController extends GetxController {
     Get.offAllNamed(
       Routes.SCORE,
       arguments: ScoreArgument(
-          correctAnswers: correctAnswers, totalQuestion: totalQuestion),
+        correctAnswers: correctAnswers,
+        totalQuestion: totalQuestion,
+      ),
     );
   }
 
